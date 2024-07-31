@@ -37,14 +37,14 @@ swagger注解描述 https://github.com/swaggo/swag/blob/master/README_zh-CN.md
 // @Description
 // @Tags         流程定义
 // @Produce      json
-// @Param        Resource  formData string  true  "流程定义资源(json)" example(json字符串)
-// @Param        CreateUserID  formData string  true  "创建者ID" example(0001)
+// @Param        resource  formData string  true  "流程定义资源(json)" example(json字符串)
+// @Param        createUserID  formData string  true  "创建者ID" example(0001)
 // @Success      200  {object}  int 流程ID
 // @Failure      400  {object}  string 报错信息
 // @Router       /def/save [post]
 func ProcDef_Save(c *gin.Context) {
-	Resource := c.PostForm("Resource")
-	CreateUserID := c.PostForm("CreateUserID")
+	Resource := c.PostForm("resource")
+	CreateUserID := c.PostForm("createUserID")
 
 	if ProcID, err := ProcessSave(Resource, CreateUserID); err == nil {
 		c.JSON(http.StatusOK, ProcID)
@@ -96,22 +96,22 @@ func ProcDef_GetProcDefByID(c *gin.Context) {
 // @Description  注意，VariablesJson格式是key-value对象集合:[{"Key":"starter","Value":"U0001"}]
 // @Tags         流程实例
 // @Produce      json
-// @Param        ProcessID  formData string  true  "流程ID" example(1)
-// @Param        BusinessID  formData string  true  "业务ID" example("订单001")
-// @Param        Comment  formData string  false  "评论意见" example("家中有事请假三天,请领导批准")
-// @Param        VariablesJson  formData string  false  "变量(Json)" example([{"Key":"starter","Value":"U0001"}])
+// @Param        processID  formData string  true  "流程ID" example(1)
+// @Param        businessID  formData string  true  "业务ID" example("订单001")
+// @Param        comment  formData string  false  "评论意见" example("家中有事请假三天,请领导批准")
+// @Param        variablesJson  formData string  false  "变量(Json)" example([{"Key":"starter","Value":"U0001"}])
 // @Success      200  {object}  int 流程实例ID
 // @Failure      400  {object}  string 报错信息
 // @Router       /inst/start [post]
 func ProcInst_Start(c *gin.Context) {
-	ProcessID, err := strconv.Atoi(c.PostForm("ProcessID"))
+	ProcessID, err := strconv.Atoi(c.PostForm("processID"))
 	if err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
-	BusinessID := c.PostForm("BusinessID")
-	Comment := c.PostForm("Comment")
-	VariablesJson := c.PostForm("VariablesJson")
+	BusinessID := c.PostForm("businessID")
+	Comment := c.PostForm("comment")
+	VariablesJson := c.PostForm("variablesJson")
 
 	if id, err := InstanceStart(ProcessID, BusinessID, Comment, VariablesJson); err == nil {
 		c.JSON(200, id)
@@ -381,7 +381,7 @@ func Task_FinishedList(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	if tasks, err := GetTaskFinishedList(UserID, ProcessName, IgnoreStartByMe,SortByAsc, StartIndex, MaxRow); err == nil {
+	if tasks, err := GetTaskFinishedList(UserID, ProcessName, IgnoreStartByMe, SortByAsc, StartIndex, MaxRow); err == nil {
 		c.JSON(200, tasks)
 	} else {
 		c.JSON(400, err.Error())
